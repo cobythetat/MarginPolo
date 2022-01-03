@@ -1,3 +1,3 @@
 # MarginPolo
 
-## Easy-to-use trading bot for Poloniex Margin Trading
+## Easy-to-use Python bot for managing Poloniex Margin Positions
