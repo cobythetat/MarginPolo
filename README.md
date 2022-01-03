@@ -1,3 +1,3 @@
-# MarginPolo
+# [MarginPolo](https://poloniex.com/signup?c=2E28D52D)
 
-## Easy-to-use Python bot for managing Poloniex Margin Positions
+## Easy-to-use Python bot for managing [Poloniex](https://poloniex.com/signup?c=2E28D52D) Margin Positions
