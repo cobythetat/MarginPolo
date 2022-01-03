@@ -1,3 +1,5 @@
+import json
+
 
 def read_keys_from_file():
     with open('api_credentials.txt') as file:
@@ -11,10 +13,9 @@ def dump_json_to_file(file_path, json_data):
         json.dump(json_data, f, ensure_ascii=False, indent=4)
 
 
-def calculate_avg_true_range(candle_chart, period=14):
+def calculate_avg_true_range(candles):
     true_ranges = []
     previous_candle = None
-    candles = candle_chart[-abs(period):]
     for i in range(len(candles)):
         if i == 0:
             previous_candle = candles[i]
