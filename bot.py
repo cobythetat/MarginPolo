@@ -19,12 +19,12 @@ class Bot:
         position['pair'] = pair
         position['atr'] = self.atr[pair]
         entry = float(position['basePrice'])
-        exit = float(close['resultingTrades'][0]['rate'])
+        exit = float(close['resultingTrades'][pair][0]['rate'])
         pl = (max([entry, exit]) - min([entry, exit])) * float(position['amount'])
         pl_percent = ((max([entry, exit]) - min([entry, exit])) / exit) * 100
         data = {
             "position": position,
-            "closing_trades": close['resultingTrades'],
+            "closing_trades": close['resultingTrades'][pair],
             "stop_losses": self.stop_losses[pair],
             "tickers": self.ticks[pair],
             "profit_loss": [pl, pl_percent]
