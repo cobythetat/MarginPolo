@@ -21,7 +21,7 @@ class Bot:
         entry = float(position['basePrice'])
         exit = float(closer['resultingTrades'][0]['rate'])
         pl = (max([entry, exit]) - min([entry, exit])) * float(position['amount'])
-        pl_percent = (max([entry, exit]) - min([entry, exit])) / exit
+        pl_percent = ((max([entry, exit]) - min([entry, exit])) / exit) * 100
         data = {
             "position": position,
             "closing_trades": close['resultingTrades'],
@@ -89,14 +89,19 @@ class Bot:
 
                     if pair not in self.stop_distances:
                         self.set_stop_loss(pair, base_price, direction)
-                        print('')
+
+                    print('[%s %s]' % (pair, direction.upper()))
+                    print('-- Base price    : %.8f %s' % (base_price, quote))
 
                     if direction == 'short':
+                        print('-- Current price : %.8f %s' % (ask, quote))
                         pl = (base_price - ask) * abs(amount)
                         pl_percent = (base_price - ask) / ask
+                        print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent*100))
 
                         if ask < base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
+                            print('-- Position in profit, multiplying stop distance by %.2f' % accelerate)
                             self.stop_distances[pair] *= accelerate
                             new_stop_loss = ask + self.stop_distances[pair]
                             if new_stop_loss < self.stop_losses[pair][-1]:
@@ -115,11 +120,14 @@ class Bot:
                             self.log_finished_trade(pair, position, close_position)
 
                     if direction == 'long':
+                        print('-- Current price : %.8f %s' % (bid, quote))
                         pl = (bid - base_price) * abs(amount)
                         pl_percent = (bid - base_price) / bid
+                        print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent*100))
 
                         if bid > base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
+                            print('-- Position in profit, multiplying stop distance by %.2f' % accelerate)
                             self.stop_distances[pair] *= accelerate
                             new_stop_loss = bid - self.stop_distances[pair]
                             if new_stop_loss > self.stop_losses[pair][-1]:
@@ -133,6 +141,8 @@ class Bot:
                             # stop loss reached
                             close_position = self.client.closeMarginPosition(pair)
                             self.log_finished_trade(pair, position, close_position)
+                    print('-- stop loss: %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
+                                                                         self.stop_distances[pair], quote))
                 time.sleep(TICK_RATE)
             except KeyboardInterrupt:
                 print('manual interrupt')
