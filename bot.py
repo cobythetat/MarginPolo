@@ -19,7 +19,7 @@ class Bot:
         position['pair'] = pair
         position['atr'] = self.atr[pair]
         entry = float(position['basePrice'])
-        exit = float(closer['resultingTrades'][0]['rate'])
+        exit = float(close['resultingTrades'][0]['rate'])
         pl = (max([entry, exit]) - min([entry, exit])) * float(position['amount'])
         pl_percent = ((max([entry, exit]) - min([entry, exit])) / exit) * 100
         data = {
@@ -86,6 +86,7 @@ class Bot:
                     base_price = float(position['basePrice'])
                     amount = float(position['amount'])
                     bid, ask = self.get_tick(pair, tickers)
+                    pl, pl_percent = (0, 0)
 
                     if pair not in self.stop_distances:
                         self.set_stop_loss(pair, base_price, direction)
@@ -97,7 +98,6 @@ class Bot:
                         print('-- Current price : %.8f %s' % (ask, quote))
                         pl = (base_price - ask) * abs(amount)
                         pl_percent = (base_price - ask) / ask
-                        print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent*100))
 
                         if ask < base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
@@ -123,7 +123,6 @@ class Bot:
                         print('-- Current price : %.8f %s' % (bid, quote))
                         pl = (bid - base_price) * abs(amount)
                         pl_percent = (bid - base_price) / bid
-                        print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent*100))
 
                         if bid > base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
@@ -141,8 +140,9 @@ class Bot:
                             # stop loss reached
                             close_position = self.client.closeMarginPosition(pair)
                             self.log_finished_trade(pair, position, close_position)
-                    print('-- stop loss: %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
+                    print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
                                                                          self.stop_distances[pair], quote))
+                    print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent * 100))
                 time.sleep(TICK_RATE)
             except KeyboardInterrupt:
                 print('manual interrupt')
