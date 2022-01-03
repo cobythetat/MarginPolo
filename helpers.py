@@ -6,6 +6,11 @@ def read_keys_from_file():
         return api_key, api_secret
 
 
+def dump_json_to_file(file_path, json_data):
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(json_data, f, ensure_ascii=False, indent=4)
+
+
 def calculate_avg_true_range(candle_chart, period=14):
     true_ranges = []
     previous_candle = None
