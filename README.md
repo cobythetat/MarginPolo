@@ -16,15 +16,15 @@ Everytime the position is recorded as positive % profit, the distance is multipl
 #### Example output
 Conole output example, when running:
 
-`[USDT_TRX LONG]
+> [USDT_TRX LONG]
 
--- Base price    : 0.07750198 USDT
+> -- Base price    : 0.07750198 USDT
 
--- Current price : 0.07728653 USDT
+> -- Current price : 0.07728653 USDT
 
--- stop loss     : 0.07680618 USDT (distance: 0.00069580 USDT)
+> -- stop loss     : 0.07680618 USDT (distance: 0.00069580 USDT)
 
--- P/L: -0.21521508 USDT (-0.28 %)`
+> -- P/L: -0.21521508 USDT (-0.28 %)
 
 
 
