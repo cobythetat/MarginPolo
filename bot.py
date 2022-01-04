@@ -53,7 +53,6 @@ class Bot:
         distance = atr * STOP_LOSS
         if direction == 'short':
             stop_loss = base_price + distance
-            self.stop_losses[pair] = [stop_loss]
         else:
             stop_loss = base_price - distance
         self.stop_losses[pair] = [stop_loss]
@@ -69,6 +68,12 @@ class Bot:
                 continue
             open_positions[p] = position_data[p]
         return open_positions
+
+    def fill_chart_data(self, pair):
+        # appends previous stop loss value if unchanged, for smooth chart
+        if len(self.ticks[pair]) > len(self.stop_losses[pair]):
+            last = self.stop_losses[pair][-1]
+            self.stop_losses[pair].append(last)
 
     def run(self):
         while True:
@@ -114,6 +119,7 @@ class Bot:
                             new_stop_loss = ask + distance
                             self.stop_losses[pair].append(new_stop_loss)
 
+                        self.fill_chart_data(pair)
                         print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
                                                                                   self.stop_distances[pair], quote))
 
@@ -139,6 +145,7 @@ class Bot:
                             new_stop_loss = bid - self.stop_distances[pair]
                             self.stop_losses[pair].append(new_stop_loss)
 
+                        self.fill_chart_data(pair)
                         print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
                                                                                   self.stop_distances[pair], quote))
 
