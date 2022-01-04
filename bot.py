@@ -29,7 +29,7 @@ class Bot:
             "tickers": self.ticks[pair],
             "profit_loss": [pl, pl_percent]
         }
-        path = 'trades/%s-%s-%s' % (pair, position['type'], str(position['stamp']))
+        path = 'trades/%s-%s-%s.json' % (pair, position['type'], str(int(position['stamp'])))
         dump_json_to_file(path, data)
         del self.stop_distances[pair]
         del self.stop_losses[pair]
