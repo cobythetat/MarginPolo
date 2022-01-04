@@ -29,7 +29,7 @@ class Bot:
             "tickers": self.ticks[pair],
             "profit_loss": [pl, pl_percent]
         }
-        path = 'trades/%s-%s-%s' % (pair, position['direction'], str(position['stamp']))
+        path = 'trades/%s-%s-%s' % (pair, position['type'], str(position['stamp']))
         dump_json_to_file(path, data)
         del self.stop_distances[pair]
         del self.stop_losses[pair]
@@ -101,7 +101,7 @@ class Bot:
 
                         if ask < base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
-                            print('-- Position in profit, multiplying stop distance by %.2f' % accelerate)
+                            print('-- Position in profit, multiplying stop distance by %.4f' % accelerate)
                             self.stop_distances[pair] *= accelerate
                             new_stop_loss = ask + self.stop_distances[pair]
                             if new_stop_loss < self.stop_losses[pair][-1]:
@@ -126,7 +126,7 @@ class Bot:
 
                         if bid > base_price:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
-                            print('-- Position in profit, multiplying stop distance by %.2f' % accelerate)
+                            print('-- Position in profit, multiplying stop distance by %.4f' % accelerate)
                             self.stop_distances[pair] *= accelerate
                             new_stop_loss = bid - self.stop_distances[pair]
                             if new_stop_loss > self.stop_losses[pair][-1]:
