@@ -136,7 +136,7 @@ class Bot:
                                 self.stop_losses[pair].append(new_stop_loss)
 
                         if bid > (self.stop_losses[pair][-1] + self.stop_distances[pair]):
-                            new_stop_loss = bid - self.stop_distances[pair][-1]
+                            new_stop_loss = bid - self.stop_distances[pair]
                             self.stop_losses[pair].append(new_stop_loss)
 
                         print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
