@@ -114,6 +114,9 @@ class Bot:
                             new_stop_loss = ask + distance
                             self.stop_losses[pair].append(new_stop_loss)
 
+                        print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
+                                                                                  self.stop_distances[pair], quote))
+
                         if ask > self.stop_losses[pair][-1]:
                             # stop loss reached
                             close_position = self.client.closeMarginPosition(pair)
@@ -136,12 +139,13 @@ class Bot:
                             new_stop_loss = bid - self.stop_distances[pair][-1]
                             self.stop_losses[pair].append(new_stop_loss)
 
+                        print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
+                                                                                  self.stop_distances[pair], quote))
+
                         if bid < self.stop_losses[pair][-1]:
                             # stop loss reached
                             close_position = self.client.closeMarginPosition(pair)
                             self.log_finished_trade(pair, position, close_position)
-                    print('-- stop loss     : %.8f %s (distance: %.8f %s)' % (self.stop_losses[pair][-1], quote,
-                                                                         self.stop_distances[pair], quote))
                     print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent * 100))
                 time.sleep(TICK_RATE)
             except KeyboardInterrupt:
