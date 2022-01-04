@@ -24,6 +24,13 @@ Conole output example, when running:
 -- P/L: -0.21521508 USDT (-0.28 %)
 ```
 
+#### How to run
+Open the folder in an IDE or in a terminal window after downloading or cloning, and make sure you got your api_credentials.txt file made, with api key on 
+first line and api secret on second line. Run the main.py file:
+
+```python
+python main.py
+```
 
 
 
