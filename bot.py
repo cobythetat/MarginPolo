@@ -27,9 +27,11 @@ class Bot:
         if position['type'] == 'long':
             pl = (exit - entry) * abs(float(position['amount']))
             pl_percent = ((exit - entry) / exit) * 100
+        aggregated = aggregate_trades(close['resultingTrades'][pair])
         data = {
             "position": position,
             "closing_trades": close['resultingTrades'][pair],
+            "aggr_close": aggregated,
             "stop_losses": self.stop_losses[pair],
             "tickers": self.ticks[pair],
             "profit_loss": [pl, pl_percent]
