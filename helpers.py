@@ -45,9 +45,9 @@ def aggregate_trades(trades):
         rates.append(float(t['rate']))
         aggregated['total'] += float(t['total'])
         aggregated['type'] = t['type']
-        if hasattr(t, 'takerAdjustment'):
+        if 'takerAdjustment' in t:
             aggregated['adjustment'] += float(t['takerAdjustment'])
-        if hasattr(t, 'makerAdjustment'):
+        if 'makerAdjustment' in t:
             aggregated['adjustment'] += float(t['makerAdjustment'])
     aggregated['rate'] = sum(rates) / len(rates)
     return aggregated
