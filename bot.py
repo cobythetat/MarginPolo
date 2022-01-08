@@ -1,5 +1,5 @@
 from poloniex import Poloniex, PoloniexError
-from helpers import read_keys_from_file, calculate_avg_true_range, dump_json_to_file
+from helpers import read_keys, calculate_avg_true_range, dump_json_to_file, aggregate_trades
 from constants import *
 import time
 
