@@ -1,7 +1,7 @@
 import json
 
 
-def read_keys_from_file():
+def read_keys():
     with open('api_credentials.txt') as file:
         api_key = file.readline().strip()
         api_secret = file.readline().strip()

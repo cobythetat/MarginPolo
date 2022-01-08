@@ -6,7 +6,7 @@ import time
 
 class Bot:
     def __init__(self):
-        api_key, api_secret = read_keys_from_file()
+        api_key, api_secret = read_keys()
         self.client = Poloniex(api_key, api_secret)
         self.stop_losses = {}
         self.stop_distances = {}
