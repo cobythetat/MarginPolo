@@ -20,8 +20,13 @@ class Bot:
         position['atr'] = self.atr[pair]
         entry = float(position['basePrice'])
         exit = float(close['resultingTrades'][pair][0]['rate'])
-        pl = (max([entry, exit]) - min([entry, exit])) * float(position['amount'])
-        pl_percent = ((max([entry, exit]) - min([entry, exit])) / exit) * 100
+        pl, pl_percent = (0, 0)
+        if position['type'] == 'short':
+            pl = (entry - exit) * abs(float(position['amount']))
+            pl_percent = ((entry - exit) / exit) * 100
+        if position['type'] == 'long':
+            pl = (exit - entry) * abs(float(position['amount']))
+            pl_percent = ((exit - entry) / exit) * 100
         data = {
             "position": position,
             "closing_trades": close['resultingTrades'][pair],
@@ -35,6 +40,7 @@ class Bot:
         del self.stop_losses[pair]
         del self.ticks[pair]
         del self.atr[pair]
+        del self.stamps[pair]
 
     def get_tick(self, pair, tickers):
         tick = tickers[pair]
@@ -45,10 +51,19 @@ class Bot:
         self.ticks[pair].append({"bid": bid, "ask": ask})
         return bid, ask
 
+    def get_chart(self, pair, start, end):
+        while True:
+            try:
+                chart = self.client.returnChartData(pair, CANDLE_PERIOD, start, end)
+                return chart
+            except PoloniexError as e:
+                print('PoloniexError when getting chart: ', e)
+                time.sleep(TICK_RATE / 2)
+
     def set_stop_loss(self, pair, base_price, direction):
         start = time.time() - (CANDLE_PERIOD * ATR_PERIOD)
         end = time.time()
-        candle_chart = self.client.returnChartData(pair, CANDLE_PERIOD, start, end)
+        candle_chart = self.get_chart(pair, start, end)
         atr = calculate_avg_true_range(candle_chart)
         distance = atr * STOP_LOSS
         if direction == 'short':
@@ -62,16 +77,21 @@ class Bot:
 
     def get_open_positions(self):
         open_positions = {}
-        position_data = self.client.getMarginPosition('all')
-        for p in position_data:
-            if position_data[p]['type'] not in ['short', 'long']:
-                continue
-            open_positions[p] = position_data[p]
-        return open_positions
+        while True:
+            try:
+                position_data = self.client.getMarginPosition('all')
+                for p in position_data:
+                    if position_data[p]['type'] not in ['short', 'long']:
+                        continue
+                    open_positions[p] = position_data[p]
+                return open_positions
+            except PoloniexError as e:
+                print('PoloniexError when getting positions: ', e)
+                time.sleep(TICK_RATE / 2)
 
     def fill_chart_data(self, pair):
         # appends previous stop loss value if unchanged, for smooth chart
-        if len(self.ticks[pair]) > len(self.stop_losses[pair]):
+        if pair in self.stop_losses and len(self.ticks[pair]) > len(self.stop_losses[pair]):
             last = self.stop_losses[pair][-1]
             self.stop_losses[pair].append(last)
 
@@ -79,7 +99,6 @@ class Bot:
         while True:
             try:
                 open_positions = self.get_open_positions()
-                time.sleep(1)
                 if not open_positions:
                     time.sleep(TICK_RATE / 2)
                     continue
@@ -153,6 +172,7 @@ class Bot:
                             # stop loss reached
                             close_position = self.client.closeMarginPosition(pair)
                             self.log_finished_trade(pair, position, close_position)
+
                     print('-- P/L: %.8f %s (%.2f %%)' % (pl, quote, pl_percent * 100))
                 time.sleep(TICK_RATE)
             except KeyboardInterrupt:
