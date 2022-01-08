@@ -49,5 +49,5 @@ def aggregate_trades(trades):
             aggregated['adjustment'] += float(t['takerAdjustment'])
         if 'makerAdjustment' in t:
             aggregated['adjustment'] += float(t['makerAdjustment'])
-    aggregated['rate'] = sum(rates) / len(rates)
+    aggregated['rate'] = round(sum(rates) / len(rates), 8)
     return aggregated
