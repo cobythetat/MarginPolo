@@ -19,6 +19,7 @@ def calculate_avg_true_range(candles):
     for i in range(len(candles)):
         if i == 0:
             previous_candle = candles[i]
+            continue
         x = float(candles[i]['high']) - float(candles[i]['low'])
         y = abs(float(candles[i]['high']) - float(previous_candle['close']))
         z = abs(float(candles[i]['low']) - float(previous_candle['close']))
@@ -26,3 +27,4 @@ def calculate_avg_true_range(candles):
         previous_candle = candles[i]
         i += 1
     return sum(true_ranges) / len(true_ranges)
+
