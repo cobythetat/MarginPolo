@@ -1,7 +1,7 @@
 
 # REMEMBER TO MAKE A FILE CALLED api_credentials.txt
-# AND PUT IN API KEY FIRST LINE
-# API SECRET ON SECOND LINE
+# AND PUT IN YOUR API KEY ON FIRST LINE
+# YOUR API SECRET ON SECOND LINE
 
 TICK_RATE = 10  # seconds between querying price, and updating/accelerating stop loss/stop distance
 CANDLE_PERIOD = 1800  # timeframe for chart. For valid inputs, see Poloniex Documentation for pulling chart data
