@@ -28,3 +28,26 @@ def calculate_avg_true_range(candles):
         i += 1
     return sum(true_ranges) / len(true_ranges)
 
+
+def aggregate_trades(trades):
+    aggregated = {
+        "amount": 0,
+        "date": None,
+        "rate": 0,
+        "total": 0,
+        "type": None,
+        "adjustment": 0
+    }
+    rates = []
+    for t in trades:
+        aggregated['amount'] += float(t['amount'])
+        aggregated['date'] = t['date']
+        rates.append(float(t['rate']))
+        aggregated['total'] += float(t['total'])
+        aggregated['type'] = t['type']
+        if hasattr(t, 'takerAdjustment'):
+            aggregated['adjustment'] += float(t['takerAdjustment'])
+        if hasattr(t, 'makerAdjustment'):
+            aggregated['adjustment'] += float(t['makerAdjustment'])
+    aggregated['rate'] = sum(rates) / len(rates)
+    return aggregated
