@@ -51,3 +51,10 @@ def aggregate_trades(trades):
             aggregated['adjustment'] += float(t['makerAdjustment'])
     aggregated['rate'] = round(sum(rates) / len(rates), 8)
     return aggregated
+
+
+def iterate_folder(folder_path):
+    directory = os.fsencode(folder_path)
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        yield filename
