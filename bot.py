@@ -34,7 +34,7 @@ class Bot:
             "aggr_close": aggregated,
             "stop_losses": self.stop_losses[pair],
             "tickers": self.ticks[pair],
-            "profit_loss": [pl, pl_percent]
+            "profit_loss": [round(pl, 8), round(pl_percent, 2)]
         }
         path = TRADES_FOLDER_PATH + '/%s-%s-%s.json' % (pair, position['type'], str(int(position['stamp'])))
         dump_json_to_file(path, data)
