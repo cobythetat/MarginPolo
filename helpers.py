@@ -14,6 +14,11 @@ def dump_json_to_file(file_path, json_data):
         json.dump(json_data, f, ensure_ascii=False, indent=4)
 
 
+def read_json(file):
+    with open(file, 'w', encoding='utf-8') as f:
+        return json.load(f)
+
+
 def calculate_avg_true_range(candles):
     true_ranges = []
     previous_candle = None
