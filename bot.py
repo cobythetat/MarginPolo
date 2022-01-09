@@ -154,7 +154,7 @@ class Bot:
                         pl = (bid - base_price) * abs(amount)
                         pl_percent = (bid - base_price) / bid
 
-                        if bid > base_price:
+                        if bid > base_price and ACCELERATE:
                             accelerate = 1 - (abs(pl_percent) * ACCELERATE)
                             print('-- Position in profit, multiplying stop distance by %.4f' % accelerate)
                             self.stop_distances[pair] *= accelerate
